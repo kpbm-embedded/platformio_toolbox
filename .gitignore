@@ -1,0 +1,24 @@
+# pio-box: only sources go into git. Everything below is downloaded, solved or produced again by
+# ./pio-box bootstrap | install | examples test (pins: pixi.toml + pixi.lock, config/platforms.tsv,
+# config/tools.tsv, pixi sha256 in pio-box). PlatformIO's core dir is install/platformio.
+/.bin/
+/.pixi/
+/cache/
+/install/
+/native/
+/build/
+/log/
+/clone_check/
+/config/local.env
+# PlatformIO project output if a project is ever built without pio-box (workspaces belong on $OUT)
+.pio/
+.pioenvs/
+.piolibdeps/
+compile_commands.json
+.clangd/
+.cache/
+.vscode/
+*.tar.zst
+*.tar.gz
+__pycache__/
+*.pyc

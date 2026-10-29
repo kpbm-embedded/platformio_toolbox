@@ -1,0 +1,50 @@
+id = "32_14"
+name = "platformio"
+kind = "tool"
+status = "active"
+tags = ["embedded"]
+
+[backup]
+tier = "critical"
+
+[tool]
+name = "platformio"
+launcher = "pio-box"
+aliases = ["pio-box"]
+env_var = "BOX_PLATFORMIO"
+env_path = "."
+native = "native/native.zsh"
+native_provides = ["pio", "platformio"]
+native_off_compat = ["PIO_BOX_NATIVE_OFF"]
+network = ["bootstrap", "install", "update"]
+
+[scripts.pio-box]
+schema = 1
+kind = "launcher"
+path = "pio-box"
+summary = "self-contained PlatformIO Core (pinned PyPI package in a pixi env) with pinned AVR, ESP32, RP2040, STM32 platforms."
+interpreter = "sh"
+commands = ["help", "where", "bootstrap", "install", "update", "clean", "status", "doctor", "shell", "run", "test", "new", "examples", "native", "relocate", "pack", "platforms", "build", "utest", "check", "list", "plan", "pio"]
+flags = ["--all", "--check", "--dir", "--dry-run", "--env", "--force", "--help", "--no-demos", "--out", "--print", "--sizes", "--with-cache", "--yes"]
+reads = { global = ["BOXT_DRY_RUN"] }
+dry_run_flag = "--dry-run"
+apply_flag = { clean = "--yes" }
+scope = "global"
+
+[scripts."test_dry_run.sh"]
+schema = 1
+kind = "test"
+path = "tests/test_dry_run.sh"
+summary = "Every pio-box command in --dry-run mode (no downloads, builds, moves or uploads), help and exit codes"
+interpreter = "bash"
+depends = { scripts = ["pio-box"] }
+test = ["tests/test_dry_run.sh"]
+
+[scripts."test_smoke.sh"]
+schema = 1
+kind = "test"
+path = "tests/test_smoke.sh"
+summary = "Smoke test of the installed pio-box: pio runs from the pixi env with the core dir inside the ID"
+interpreter = "bash"
+depends = { scripts = ["pio-box"] }
+test = ["tests/test_smoke.sh"]

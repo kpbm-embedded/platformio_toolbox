@@ -1,0 +1,9 @@
+# 32_14_platformio pinned dev platforms (tab separated). ./pio-box install runs
+# `pio pkg install -g -p platformio/<name>@<version>`; every example platformio.ini pins the same
+# version (doctor checks). Checked 2026-10-25 (newest release of each).
+# name	version	upstream	notes
+atmelavr	5.3.0	platformio/platform-atmelavr	Arduino Nano (nanoatmega328)
+espressif32	8.0.0	platformio/platform-espressif32	ESP32-S3-DevKitC-1, Arduino core 3.3.12
+raspberrypi	1.20.0	platformio/platform-raspberrypi	Raspberry Pi Pico (Arduino-mbed 4.6.0)
+ststm32	20.0.0	platformio/platform-ststm32	BlackPill F411CE (STM32duino)
+native	1.2.1	platformio/platform-native	host programs and Unity unit tests (gcc from the pixi env)

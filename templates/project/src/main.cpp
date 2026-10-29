@@ -1,0 +1,15 @@
+// @NAME@: made by ./pio-box new project @NAME@
+#include <Arduino.h>
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(115200);
+  Serial.println("@NAME@ started");
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(250);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(750);
+}

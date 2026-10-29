@@ -1,0 +1,14 @@
+{
+  "name": "@NAME@",
+  "version": "1.0.0",
+  "description": "CRC-8 (SMBus), CRC-16/CCITT-FALSE and CRC-32 (IEEE) without tables, for any MCU or the host",
+  "keywords": ["crc", "checksum"],
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*",
+  "headers": ["@NAME@.h"],
+  "export": {
+    "exclude": ["test", "platformio.ini", "ci"]
+  },
+  "examples": ["examples/*"]
+}

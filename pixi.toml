@@ -1,0 +1,26 @@
+# 32_14_platformio pixi env (managed by ./pio-box, see README.md). conda-forge + PyPI, pinned by
+# pixi.lock; env in ./.pixi, package caches in ./cache. PlatformIO Core is the PyPI package (pinned
+# exactly); its platforms/toolchains go to PLATFORMIO_CORE_DIR=install/platformio (not ~/.platformio).
+# gcc/g++ are the host compilers for `pio test -e native` (Unity unit tests on the PC).
+[workspace]
+name = "pio_box"
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
+
+[dependencies]
+python = "3.12.*"
+pip = "*"
+
+[target.linux.dependencies]
+gcc = "14.*"
+gxx = "14.*"
+
+[target.osx.dependencies]
+clang = "19.*"
+clangxx = "19.*"
+
+[target.win-64.dependencies]
+m2w64-gcc = "*"
+
+[pypi-dependencies]
+platformio = "==6.2.0"

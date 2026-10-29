@@ -1,0 +1,8 @@
+# 32_14_platformio pinned tools (tab separated) that PlatformIO otherwise fetches on first use.
+# ./pio-box install runs `pio pkg install -g -t platformio/<name>@<version>`; doctor checks them.
+# Versions: the newest matching PlatformIO Core 6.2.0's own spec (platformio/dependencies.py) or the
+# espressif32 8.0.0 platform.json spec; registry checksums verify the downloads. Checked 2026-10-29.
+# name	version	notes
+tool-cppcheck	1.21100.230717	pio check (core spec ~1.21100.0)
+tool-clangtidy	1.150005.0	pio check --tool clangtidy (core spec ~1.150005.0)
+tool-mklittlefs	1.203.210628	ESP32 -t buildfs (espressif32 spec ~1.203.0)
