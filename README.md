@@ -8,7 +8,7 @@ Use it for multi-board firmware projects driven by a `platformio.ini`. Its core 
 The launcher never shadows `pio`.
 
 Status: **ready** (doctor 20 ok, examples 18/18, templates 15/15, smoke 32/32, dry-run 42/42, 2026-10-29).
-Launcher: `./pio-box`. Git repo `platformio` (sources only, see `.gitignore`).
+Launcher: `./pio-box`. Git repo `platformio_toolbox` (sources only, see `.gitignore`).
 
 ## What's included
 
@@ -128,12 +128,12 @@ instantiates every kind and builds it, runs its tests or its check:
 | `rust_lib` | Rust staticlib (`rust/`, C header) + Unity tests + BlackPill/Pico envs | utest native (3); skipped without 32_17 |
 | `zig_lib` | Zig staticlib (`zig/`, C header) + Unity tests + BlackPill/ESP32-C3 envs | utest native (3); skipped without 32_24 |
 
-Rust, Zig and BEAM: PlatformIO has no support for any of them (no Rust/Zig/Erlang builders or frameworks). What
+Rust, Zig and Bend: PlatformIO has no support for any of them (no Rust/Zig/Bend builders or frameworks). What
 works is a pre-build `extra_scripts` step that runs another ID's pinned toolchain and links the static library into
 the C/C++ project (`rust_staticlib`, `zig_staticlib`). The toolchains are reached, not installed: `$BOX_EMBEDDED_RUST`
 / `$BOX_MICROZIG`, else the sibling folder of this ID; missing -> the example exits 3 (skip) with a message.
-BEAM (AtomVM): not supported because AtomVM is a VM firmware built with ESP-IDF/CMake or the Pico SDK by its own
-build (32_29_atomvm), with no PlatformIO build and nothing to link into an Arduino project; use 32_29.
+Bend: not supported because Bend 2 emits one hosted C file (pthread, mmap, sockets; 64-bit terms) with no bare-metal
+target, so nothing can be linked into an MCU firmware; Bend lives in 32_31_bend.
 
 ## Configuration and environment variables
 

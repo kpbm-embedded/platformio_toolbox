@@ -77,3 +77,7 @@
   path; now stderr (checked: both examples print `skip: ...` and exit 3 without the other IDs). That run stopped on
   `No space left on device`: idisk03 filled up (shared; about 60 GB of earlier clone checks sit in its Trash) after
   install, doctor 20 ok, smoke 32/32 and dry-run 42/42 had passed in the clone.
+
+## 2026-10-29: Bend instead of BEAM (brief correction)
+- The third language is Bend 2, not BEAM: the README's AtomVM line is replaced by a Bend line (no MCU target: Bend emits
+  hosted POSIX C). No BEAM/AtomVM files had been added here. GitHub repo name: `platformio_toolbox` (README fixed).
