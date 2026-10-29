@@ -57,3 +57,12 @@ ex_utest() { # pio test args... -> output in TEST_OUTPUT; fails (printing it) wh
   TEST_OUTPUT=$("$BOX" utest "$EX_DIR" "$@" 2>&1) || { echo "$TEST_OUTPUT"; echo "FAIL pio test $*"; return 1; }
   grep -E 'test cases|PASSED|FAILED' <<<"$TEST_OUTPUT" | tail -3 || true
 }
+sibling_launcher() { # VAR id-folder launcher -> path of another Box tool's launcher ($VAR, else the sibling
+  # folder of this ID); prints a skip message and returns 3 when it is missing (never installs it here)
+  local folder
+  for folder in "${!1:-}" "${BOXT_ROOT:?}/../$2"; do
+    if [[ -n "$folder" && -x "$folder/$3" ]]; then (cd "$folder" && echo "$PWD/$3"); return 0; fi
+  done
+  echo "skip: $2 not found (\$$1 or a sibling folder of 32_14_platformio); it provides $3"
+  return 3
+}

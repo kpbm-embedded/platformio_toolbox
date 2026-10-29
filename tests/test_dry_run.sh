@@ -38,6 +38,8 @@ check build       '\+ pio run -d .*examples/blink -j [1-4] -e pico' "$Q" --dry-r
 check utest       '\+ pio test -d .*unit_test_native -e native' "$Q" --dry-run utest unit_test_native -e native
 check check       '\+ pio check -d .*static_check -e clean' "$Q" --dry-run check static_check -e clean
 check_exit usage-check 2                                   "$Q" check
+check new-rust    '\+ copy .*templates/rust_lib'           "$Q" --dry-run new rust_lib demo --dir /nonexistent
+check new-zig     '\+ copy .*templates/zig_lib'            "$Q" --dry-run new zig_lib demo --dir /nonexistent
 check new-library '\+ copy .*templates/library'            "$Q" --dry-run new library demo --dir /nonexistent
 check plan-c3     'esptool'                                "$Q" plan esp32_freertos -e esp32c3
 check plan-g431   'ttyACM0'                                "$Q" plan multi_env_flags -e weact_g431

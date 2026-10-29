@@ -7,7 +7,7 @@ Use it for multi-board firmware projects driven by a `platformio.ini`. Its core 
 `~/.platformio`), every project's `.pio` workspace goes to idisk03, telemetry is off. No sudo, no system packages.
 The launcher never shadows `pio`.
 
-Status: **ready** (doctor 20 ok, examples 16/16, templates 12/12, smoke 30/30, dry-run 40/40, 2026-10-29).
+Status: **ready** (doctor 20 ok, examples 18/18, templates 15/15, smoke 32/32, dry-run 42/42, 2026-10-29).
 Launcher: `./pio-box`. Git repo `platformio` (sources only, see `.gitignore`).
 
 ## What's included
@@ -65,7 +65,7 @@ Global option: `--dry-run` / `-n` prints what a command would do. Exit codes: 0 
 | `list` | read-only: serial ports (`pio device list` + lsusb filter) | `./pio-box list` |
 | `plan <project-dir> [-e env]` | PRINT the upload commands per env, runs nothing | `./pio-box plan blink -e nano` |
 | `pio [args]` | raw `pio` with this folder's core dir (pass-through) | `./pio-box pio device list` |
-| `new <kind> <name> [--dir D] [--force]` | project from `templates/` (12 kinds, below) | `./pio-box new multi_board my_fw --dir ~/fw` |
+| `new <kind> <name> [--dir D] [--force]` | project from `templates/` (15 kinds, below) | `./pio-box new multi_board my_fw --dir ~/fw` |
 | `test [--all]` | `tests/test_smoke.sh`; `--all` adds the dry-run test and examples test | `./pio-box test` |
 | `examples list \| run <ex> [args] \| build [ex...] \| test [ex...]` | list, run, build or test the examples | `./pio-box examples test` |
 | `native [--print]` | write `native/{native.zsh,native.bash,bin/}` | `./pio-box native` |
@@ -81,7 +81,7 @@ the platform) or an ST-Link. Find ports first with `./pio-box list`.
 
 ## Examples and templates
 
-`./pio-box examples list`, then `examples test` for all 16. No board is needed: every test builds and checks the
+`./pio-box examples list`, then `examples test` for all 18. No board is needed: every test builds and checks the
 artifact (size, symbols, sections, image headers) or runs on the host; uploads are only printed (`plan`).
 
 | Example | Envs | What it shows |
@@ -101,6 +101,8 @@ artifact (size, symbols, sections, image headers) or runs on the host; uploads a
 | `lib_deps_json` | native, esp32c3, blackpill | registry library pinned exactly (`bblanchon/ArduinoJson@7.4.3`) in a local lib; 5 host tests |
 | `baremetal_ldscript` | blackpill | no framework: own startup + linker script, register blink; vector table, SP, reset vector, map file checked (276 bytes) |
 | `compiledb` | blackpill, pico, native | `-t compiledb` into the build dir (not the project root); `-mcpu` per env checked |
+| `rust_staticlib` | native, blackpill, pico | no_std Rust crate built by a pre-script with 32_17's cargo, linked into C++; `cargo test` (2) + Unity (3) on the host; Rust symbols in both firmwares |
+| `zig_staticlib` | native, blackpill, esp32c3 | Zig file built with 32_24's `zig build-lib` (thumb cortex_m4 hard float, riscv32 imc), linked into C++; `zig test` (2) + Unity (3) |
 | `esp32_partitions_fs` | esp32s3 | custom `partitions.csv` (2 OTA slots, LittleFS, coredump), LittleFS image from `data/` (`-t buildfs`); `partitions.bin` decoded |
 
 Artifacts checked: `firmware.hex` (Nano), `firmware.bin` (ESP32, STM32), `firmware.uf2` (Pico), `program` (native).
@@ -123,6 +125,15 @@ instantiates every kind and builds it, runs its tests or its check:
 | `baremetal_stm32` | BlackPill without framework (startup, linker script) | build |
 | `esp32_fs` | partitions.csv + LittleFS `data/` | build + `-t buildfs` |
 | `compiledb` | `compile_commands.json` in the build dir | build blackpill `-t compiledb` |
+| `rust_lib` | Rust staticlib (`rust/`, C header) + Unity tests + BlackPill/Pico envs | utest native (3); skipped without 32_17 |
+| `zig_lib` | Zig staticlib (`zig/`, C header) + Unity tests + BlackPill/ESP32-C3 envs | utest native (3); skipped without 32_24 |
+
+Rust, Zig and BEAM: PlatformIO has no support for any of them (no Rust/Zig/Erlang builders or frameworks). What
+works is a pre-build `extra_scripts` step that runs another ID's pinned toolchain and links the static library into
+the C/C++ project (`rust_staticlib`, `zig_staticlib`). The toolchains are reached, not installed: `$BOX_EMBEDDED_RUST`
+/ `$BOX_MICROZIG`, else the sibling folder of this ID; missing -> the example exits 3 (skip) with a message.
+BEAM (AtomVM): not supported because AtomVM is a VM firmware built with ESP-IDF/CMake or the Pico SDK by its own
+build (32_29_atomvm), with no PlatformIO build and nothing to link into an Arduino project; use 32_29.
 
 ## Configuration and environment variables
 
@@ -173,7 +184,7 @@ tests/test_smoke.sh        # pio, core dir, telemetry, platforms, tools, every t
 tests/test_dry_run.sh      # every command in --dry-run + shellcheck
 ```
 
-Last known (2026-10-29): doctor 20 ok / 0 warn / 0 fail; examples 16/16; smoke 30/30 (13 template kinds); dry-run 40/40.
+Last known (2026-10-29): doctor 20 ok / 0 warn / 0 fail; examples 18/18; smoke 32/32 (15 template kinds); dry-run 42/42.
 
 Fresh clone (what a new machine does): `git clone ... && cd platformio && ./pio-box install && ./pio-box doctor &&
 ./pio-box test --all`. Everything is fetched by the launcher: pixi (sha256 in `pio-box`), the env (`pixi.lock`),
@@ -220,7 +231,7 @@ Each script has a `[scripts.*]` descriptor in `.box.toml` (`box scripts show 32_
 | `pio-box` | launcher (POSIX sh): bootstraps the pinned pixi, keeps caches in this folder, then runs `lib/` |
 | `lib/boxtool.bash` | shared launcher framework (boxtool 3: bootstrap, pinned downloads, pixi env, every common command); byte-identical copy of `$BOX/00_09_meta/05_policy/templates/tool/lib/boxtool.bash` (edit there, then sync) |
 | `lib/platformio.bash` | this tool's hooks and extra commands (job cap 4, core dir, telemetry) |
-| `examples/common.sh`, `examples/*/example.sh` | shared example code (build, artifact, symbol and section checks) and the 16 examples |
+| `examples/common.sh`, `examples/*/example.sh` | shared example code (build, artifact, symbol and section checks) and the 18 examples |
 | `tests/test_smoke.sh`, `tests/test_dry_run.sh`, `tests/testlib.sh` | smoke test, dry-run/shellcheck test, shared helpers |
 | `native/` | written by `./pio-box native`; regenerate, do not edit |
 

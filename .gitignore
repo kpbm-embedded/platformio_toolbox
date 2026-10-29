@@ -22,3 +22,7 @@ compile_commands.json
 *.tar.gz
 __pycache__/
 *.pyc
+# cargo / zig output if run outside the pre-scripts (they write into the build folder)
+target/
+.zig-cache/
+zig-out/

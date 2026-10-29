@@ -53,6 +53,12 @@ template_check baremetal_stm32 '\[SUCCESS\]'               build
 template_check esp32_fs        '\[SUCCESS\]'               build -e esp32s3
 check "template esp32_fs: buildfs" 'littlefs.bin|Building FS image' "$Q" build "$TEST_TMP/t_esp32_fs" -e esp32s3 -t buildfs
 template_check compiledb       'compile_commands.json'     build -e blackpill -t compiledb
+# Rust / Zig templates need another ID's toolchain ($BOX_EMBEDDED_RUST / $BOX_MICROZIG or the sibling folder)
+other_id() { local folder; for folder in "${!1:-}" "$HERE/../$2"; do [[ -n "$folder" && -x "$folder/$3" ]] && return 0; done; return 1; }
+if other_id BOX_EMBEDDED_RUST 32_17_embedded_rust rust-box; then template_check rust_lib '3 test cases: 3 succeeded' utest -e native
+else printf 'skip  template rust_lib (32_17_embedded_rust not found)\n'; fi
+if other_id BOX_MICROZIG 32_24_microzig microzig-box; then template_check zig_lib '3 test cases: 3 succeeded' utest -e native
+else printf 'skip  template zig_lib (32_24_microzig not found)\n'; fi
 if find "$TEST_TMP" -name .pio -o -name compile_commands.json | grep -q .; then bad ".pio or compile_commands.json inside a template copy"
 else ok "templates: no .pio / compile_commands.json in the project folders"; fi
 home_entries_after=$(find "$HOME/.platformio" 2>/dev/null | wc -l)

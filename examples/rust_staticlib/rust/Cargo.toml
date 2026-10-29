@@ -1,0 +1,18 @@
+[package]
+name = "box_rust"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "no_std Rust functions with a C ABI, linked into a PlatformIO C/C++ project (32_14_platformio)"
+
+[lib]
+crate-type = ["staticlib", "rlib"]   # staticlib for PlatformIO, rlib for `cargo test`
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+codegen-units = 1
+lto = true

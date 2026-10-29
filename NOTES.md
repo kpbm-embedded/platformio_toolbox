@@ -57,3 +57,19 @@
 - Fresh clone (idisk03, cache/ symlinked, BOX_INTEGRATION=0): install (pixi, env, 5 platforms, 3 tools, example
   packages) ok; doctor 20 ok; test --all: smoke 30/30, dry-run 40/40, examples 16/16. Only finding: `/cache/` did
   not match the symlinked cache, now `/cache`.
+
+## 2026-10-29: Rust, Zig and BEAM (brief addendum)
+- PlatformIO has no Rust, Zig or Erlang support (no builders, frameworks or platforms). What fits: a pre-build
+  `extra_scripts` step that runs another ID's pinned toolchain and links a static library into C/C++.
+- Rust: `rust_staticlib` example + `rust_lib` template. no_std crate (`#![cfg_attr(not(test), no_std)]`, panic=abort)
+  built by scripts/cargo.py with `rust-box cargo` of 32_17_embedded_rust (`$BOX_EMBEDDED_RUST`, else the sibling
+  folder) for x86_64-unknown-linux-gnu / thumbv7em-none-eabihf / thumbv6m-none-eabi. `cargo test` needs `--lib`
+  (the staticlib build of the crate is no_std and cannot unwind). Results: cargo test 2, Unity 3, BlackPill + Pico.
+- Zig: `zig_staticlib` example + `zig_lib` template. `microzig-box zig build-lib` (Zig 0.17.0 of 32_24_microzig)
+  with -fPIC for the PIE host program, thumb-freestanding-eabihf cortex_m4 (hard float like the STM32 core), riscv32
+  generic_rv32+m+c for the ESP32-C3. Results: zig test 2, Unity 3, BlackPill + ESP32-C3.
+- Missing toolchain ID: example.sh prints `skip: ...` and exits 3 (boxtool's summary shows that as FAIL);
+  the pre-scripts stop the build with exit 3; the smoke test prints `skip` for the two templates.
+- BEAM: skipped. AtomVM is a VM firmware built by its own ESP-IDF/CMake/Pico SDK build (32_29_atomvm); there is no
+  PlatformIO build of it and nothing to link into an Arduino project.
+- Results: doctor 20 ok; examples 18/18; smoke 32/32; dry-run 42/42 (shellcheck clean).
