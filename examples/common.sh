@@ -63,6 +63,6 @@ sibling_launcher() { # VAR id-folder launcher -> path of another Box tool's laun
   for folder in "${!1:-}" "${BOXT_ROOT:?}/../$2"; do
     if [[ -n "$folder" && -x "$folder/$3" ]]; then (cd "$folder" && echo "$PWD/$3"); return 0; fi
   done
-  echo "skip: $2 not found (\$$1 or a sibling folder of 32_14_platformio); it provides $3"
+  echo "skip: $2 not found (\$$1 or a sibling folder of 32_14_platformio); it provides $3" >&2
   return 3
 }

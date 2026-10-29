@@ -73,3 +73,7 @@
 - BEAM: skipped. AtomVM is a VM firmware built by its own ESP-IDF/CMake/Pico SDK build (32_29_atomvm); there is no
   PlatformIO build of it and nothing to link into an Arduino project.
 - Results: doctor 20 ok; examples 18/18; smoke 32/32; dry-run 42/42 (shellcheck clean).
+- Fresh clone (second run): found that `sibling_launcher` printed its skip message on stdout, inside the captured
+  path; now stderr (checked: both examples print `skip: ...` and exit 3 without the other IDs). That run stopped on
+  `No space left on device`: idisk03 filled up (shared; about 60 GB of earlier clone checks sit in its Trash) after
+  install, doctor 20 ok, smoke 32/32 and dry-run 42/42 had passed in the clone.
