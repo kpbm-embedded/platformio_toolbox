@@ -3,7 +3,7 @@
 # config/tools.tsv, pixi sha256 in pio-box). PlatformIO's core dir is install/platformio.
 /.bin/
 /.pixi/
-/cache/
+/cache
 /install/
 /native/
 /build/

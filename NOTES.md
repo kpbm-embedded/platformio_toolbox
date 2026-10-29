@@ -50,7 +50,10 @@
   static_check example keeps analysed code free of libc headers and asserts that the planted bugs are reported.
   `pio test` on an embedded env with `--without-uploading --without-testing` reports built suites as SKIPPED.
   cppcheck 2.11 aborts on the STM32 core headers (`check_skip_packages = no`), so the blackpill check skips them.
-- Git: `git init -b main`; `.gitignore` keeps out .bin, .pixi, cache, install (core dir), native, build, log,
+- Git: `git init -b main`; `.gitignore` keeps out .bin, .pixi, cache (also as a symlink), install (core dir), native, build, log,
   `.pio`, compile_commands.json, tarballs.
 - Results: doctor 20 ok / 0 warn / 0 fail; examples 16/16; smoke 30/30 (13 template kinds); dry-run 40/40
   (shellcheck clean).
+- Fresh clone (idisk03, cache/ symlinked, BOX_INTEGRATION=0): install (pixi, env, 5 platforms, 3 tools, example
+  packages) ok; doctor 20 ok; test --all: smoke 30/30, dry-run 40/40, examples 16/16. Only finding: `/cache/` did
+  not match the symlinked cache, now `/cache`.
